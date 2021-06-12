@@ -1,0 +1,60 @@
+
+Spring:
+  application:
+    name: cloud-gateway
+
+
+server:
+  port: 8008
+
+
+eureka:
+  instance:
+   hostname: localhost
+
+  eureka:
+    client:
+      fetch-registry=true:
+spring:
+  cloud:
+    gateway:
+       routes:
+          - id: flight-booking
+            uri: lb://flight-booking
+            predicates:
+              - Path=/booking/**
+          - id: flight-fare
+            uri: lb://flight-fare
+            predicates:
+              - Path=/fare/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: fallbackCommand
+                  fallbackuri: forward:/fallback/message
+          - id: flight-search
+            uri: lb://flight-search
+            predicates:
+              - Path=/search/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: fallbackCommand
+                  fallbackuri: forward:/fallback/message
+          - id: flight-checkin
+            uri: lb://flight-checkin
+            predicates:
+              - Path=/checkin/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: fallbackCommand
+                  fallbackuri: forward:/fallback/message
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
