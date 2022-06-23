@@ -1,0 +1,10 @@
+
+spring:
+  application:
+    name: flight-fare
+server:
+  port: 8002
+
+eureka:
+  instance:
+    hostname: localhost
